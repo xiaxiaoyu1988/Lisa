@@ -1,5 +1,5 @@
 # lisa
-A cross platform ui kit base on cefpython
+A cross platform ui kit base on [cefpython](https://github.com/cztomczak/cefpython)
 
 - [lisa](#lisa)
     - [Install](#install)
@@ -8,7 +8,7 @@ A cross platform ui kit base on cefpython
 
 ## Install
 ```
-    pip install cefpython
+    pip install cefpython3==57.0
 ```
 
 Windows Platform
@@ -25,3 +25,11 @@ Base on pyinstaller
 ## ToDo
  * [ ] Base framework
  * [ ] Windows Support
+    * [x] Base on pywin32 
+    * [x] Hide title bar
+    * [x] Custom window height and width
+ * [ ] Mac OS Support
+     * [ ] Base on PyObjC
+     * [ ] Custom window height and width
+     * [ ] Hide title bar
+ * [ ] Linux Support

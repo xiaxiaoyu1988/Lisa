@@ -14,9 +14,11 @@ import platform
 import _platform
 import sys
 
-if platform.system() == "Windows":
+current_platform = platform.system()
+if current_platform == "Windows":
     import _platform.windows as _pw
-
+elif current_platform == "Darwin":
+    import _platform.macosx as _pw
 
 def main():
     # command_line_args()
@@ -33,7 +35,8 @@ def main():
     client_window = _pw.Window(cef = cef, window_info = window_info, settings=settings)
     window_handle = client_window.platform_create_browser()
 
-    window_info.SetAsChild(window_handle)
+    if current_platform != "Darwin":
+        window_info.SetAsChild(window_handle)
 
     client_window.platform_message_loop("https://www.baidu.com")
     cef.Shutdown()

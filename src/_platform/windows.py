@@ -17,12 +17,12 @@ from _platform_exception import PlatformException
 class Window(object):
     def __init__(self, cef=None, window_info=None, settings={}, multi_threaded=False):
         if not cef:
-            raise PlatformException("cef", "is NULL")
+            raise PlatformException("cef is NULL")
         else:
             self.cef = cef
 
         if not window_info:
-            raise PlatformException("window_info", "is NULL")
+            raise PlatformException("window_info is NULL")
         else:
             self.window_info = window_info
 
