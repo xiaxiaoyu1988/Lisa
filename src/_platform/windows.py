@@ -65,7 +65,6 @@ class Window(object):
 
     def create_browser(self, url):
         assert(self.cef.IsThread(self.cef.TID_UI))
-        print self.settings
         self.cef.CreateBrowserSync(window_info=self.window_info,
                             settings={},
                             url=url)

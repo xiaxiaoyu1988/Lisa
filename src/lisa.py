@@ -20,27 +20,35 @@ if current_platform == "Windows":
 elif current_platform == "Darwin":
     import _platform.macosx as _pw
 
-def main():
-    # command_line_args()
-    check_versions()
-    sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
 
-    settings = {
-        "multi_threaded_message_loop": False,
-    }
-    cef.Initialize(settings=settings)
+class App(object):
+    def __init__(self):
+        pass
+    
+    def init(self, client_file_path = "file://client/index.html"):
+        # command_line_args()
+        check_versions()
+        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+
+        settings = {
+            "multi_threaded_message_loop": False,
+        }
+        cef.Initialize(settings=settings)
+
+        window_info = cef.WindowInfo()
+        client_window = _pw.Window(
+            cef=cef, window_info=window_info, settings=settings)
+        window_handle = client_window.platform_create_browser()
+
+        if current_platform != "Darwin":
+            window_info.SetAsChild(window_handle)
+
+        client_window.platform_message_loop(client_file_path)
+        cef.Shutdown()
 
     
-    window_info = cef.WindowInfo()
-    client_window = _pw.Window(cef = cef, window_info = window_info, settings=settings)
-    window_handle = client_window.platform_create_browser()
-
-    if current_platform != "Darwin":
-        window_info.SetAsChild(window_handle)
-
-    client_window.platform_message_loop("https://www.baidu.com")
-    cef.Shutdown()
-
+    def run(self):
+        pass
 
 def command_line_args():
     global g_multi_threaded
@@ -62,4 +70,6 @@ def check_versions():
 
 
 if __name__ == '__main__':
-    main()
+    app = App()
+    app.init()
+    app.run()

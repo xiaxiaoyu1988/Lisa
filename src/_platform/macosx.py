@@ -36,12 +36,12 @@ class Window(object):
         pass
 
     def platform_message_loop(self, url):
+        print("client url:", url)
         self.create_browser(url=url)
         self.cef.MessageLoop()
 
     def create_browser(self, url):
         assert(self.cef.IsThread(self.cef.TID_UI))
-        print self.settings
         self.cef.CreateBrowserSync(window_info=self.window_info,
                                    settings={},
                                    url=url)
