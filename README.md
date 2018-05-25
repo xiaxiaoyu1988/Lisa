@@ -23,4 +23,5 @@ Base on pyinstaller
 ```
 
 ## ToDo
- [x] xx
+ * [ ] Base framework
+ * [ ] Windows Support
