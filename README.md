@@ -24,12 +24,17 @@ Base on pyinstaller
 
 ## ToDo
  * [ ] Base framework
- * [ ] Windows Support
+ * [x] Windows Support
     * [x] Base on pywin32 
     * [x] Hide title bar
     * [x] Custom window height and width
- * [ ] Mac OS Support
+ * [x] Mac OS Support
      * [ ] Base on PyObjC
      * [ ] Custom window height and width
      * [ ] Hide title bar
  * [ ] Linux Support
+ * [ ] Front and back communication
+     * [ ] Javascript callback
+     * [ ] http protocol
+ * [ ] Database Support
+     * [ ] Internal sqlite3 support   
