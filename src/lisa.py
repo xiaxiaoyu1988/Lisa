@@ -23,32 +23,33 @@ elif current_platform == "Darwin":
 
 class App(object):
     def __init__(self):
-        pass
+        self.client_window = None
+        self.client_file_path = ""
     
     def init(self, client_file_path = "file://client/index.html"):
         # command_line_args()
         check_versions()
         sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
-
+        self.client_file_path = client_file_path
         settings = {
             "multi_threaded_message_loop": False,
         }
         cef.Initialize(settings=settings)
 
         window_info = cef.WindowInfo()
-        client_window = _pw.Window(
+        self.client_window = _pw.Window(
             cef=cef, window_info=window_info, settings=settings)
-        window_handle = client_window.platform_create_browser()
+        window_handle = self.client_window.platform_create_browser()
 
         if current_platform != "Darwin":
             window_info.SetAsChild(window_handle)
-
-        client_window.platform_message_loop(client_file_path)
-        cef.Shutdown()
-
+    
+    def execute_js_function(self, function_name, params):
+        self.client_window.browser.ExecuteFunction(function_name, params)
     
     def run(self):
-        pass
+        self.client_window.platform_message_loop(self.client_file_path)
+        cef.Shutdown()
 
 def command_line_args():
     global g_multi_threaded

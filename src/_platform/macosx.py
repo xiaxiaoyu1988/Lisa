@@ -25,7 +25,7 @@ class Window(object):
             self.window_info = window_info
 
         self.settings = settings
-
+        self.browser  = None
         self.WindowUtils = cef.WindowUtils()
 
         self.window_handle = None
@@ -42,7 +42,7 @@ class Window(object):
 
     def create_browser(self, url):
         assert(self.cef.IsThread(self.cef.TID_UI))
-        self.cef.CreateBrowserSync(window_info=self.window_info,
+        self.browser = self.cef.CreateBrowserSync(window_info=self.window_info,
                                    settings={},
                                    url=url)
 
