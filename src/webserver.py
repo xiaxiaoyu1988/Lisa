@@ -52,17 +52,28 @@ class BaseResponse(object):
         self._status_line = 'OK'
         self._status_code = 200
 
+class BaseRequest(object):
+    def __init__(self):
+        pass
+
 class Webserver(threading.Thread):
     def __init__(self):
         super(Webserver, self).__init__()
 
         self.server = WSGIRefServer()
     
+    def route(self, path = '', method = 'GET'):
+        print path, method
+        pass
+    
     def _handle(self, environ):
         pass
     
     def wsgi(self, environ, start_response):
         try:
+            print environ
+            print environ['wsgi.multithread']
+            print environ['PATH_INFO']
             start_response('200 OK', [
                            ('Content-Length', '5'), ('Content-Type', 'text/html; charset=UTF-8')])
             return ["hello"]

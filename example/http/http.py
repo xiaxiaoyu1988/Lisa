@@ -4,6 +4,11 @@ import sys
 sys.path.append(r"../../src")
 from lisa import App
 
+
+@route('/test')
+def test():
+    print 'test'
+
 def main():
     app = App()
     client_path = "http://127.0.0.1:8080/"
