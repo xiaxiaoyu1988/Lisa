@@ -31,13 +31,16 @@ class Window(object):
         self.window_handle = None
         self.multi_threaded = multi_threaded
 
-    def platform_create_browser(self, title="lisa", class_name="lisa", width=800, height=600, icon="", frameless=False):
+    def platform_create_window(self, title="lisa", class_name="lisa", width=800, height=600, icon="", frameless=False):
 
         pass
-
-    def platform_message_loop(self, url):
+    
+    def platform_create_window(self, url)
         print("client url:", url)
         self.create_browser(url=url)
+
+    def platform_message_loop(self):
+        
         self.cef.MessageLoop()
 
     def create_browser(self, url):

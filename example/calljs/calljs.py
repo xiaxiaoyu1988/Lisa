@@ -13,6 +13,7 @@ def main():
     client_path = "file://" +  os.getcwd() + "/index.html"
     app.init(client_path)
     arg = [app]
+    # Sleep 10 seconds for wait DOM load completed
     threading.Timer(10, calljs, arg).start()
     app.run()
 

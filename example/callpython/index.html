@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>This is a lisa sample</title>
+        <script>
+            function js_log(key, msg)
+            {
+                 console = document.getElementById("console_log")
+                console.innerHTML += "<p>" + key + ":" + msg + "</p>";
+            }
+
+            function test_python() {
+                js_log("lisa_var", lisa_var);
+                js_log("lisa_version", lisa_version);
+                js_log("call python_function", python_function("javascript"))
+            }
+        </script>
+    </head>
+
+    <body>
+        <button onclick="test_python()" > click me</button>
+
+        <div id="console_log">
+
+        </div>
+    </body>
+</html>

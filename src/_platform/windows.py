@@ -43,7 +43,7 @@ class Window(object):
         self.multi_threaded = multi_threaded
 
     
-    def platform_create_browser(self, title="lisa", class_name="lisa", width=800, height=600, icon="", frameless=False):
+    def platform_create_window(self, title="lisa", class_name="lisa", width=800, height=600, icon="", frameless=False):
         
         self.window_handle = self.create_window(title=title,
                                       class_name=class_name,
@@ -52,16 +52,20 @@ class Window(object):
                                       window_proc=self.window_proc,
                                       icon=icon)
         return self.window_handle
-
-
-    def platform_message_loop(self, url):
+    
+    def platform_create_browser(self, url):
         if self.multi_threaded:
             self.cef.PostTask(self.cef.TID_UI,
-                        self.create_browser,
-                        url)
-            win32gui.PumpMessages()
+                              self.create_browser,
+                              url)
         else:
             self.create_browser(url=url)
+
+
+    def platform_message_loop(self):
+        if self.multi_threaded:
+            win32gui.PumpMessages()
+        else:
             self.cef.MessageLoop()
 
     def create_browser(self, url):

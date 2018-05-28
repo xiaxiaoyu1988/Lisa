@@ -26,10 +26,11 @@ class App(object):
         self.client_window = None
         self.client_file_path = ""
     
-    def init(self, client_file_path = "file://client/index.html"):
+    def init(self, client_file_path = "file://client/index.html", debug=False):
         # command_line_args()
         check_versions()
-        sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
+        if not debug:
+            sys.excepthook = cef.ExceptHook  # To shutdown all CEF processes on error
         self.client_file_path = client_file_path
         settings = {
             "multi_threaded_message_loop": False,
@@ -39,17 +40,29 @@ class App(object):
         window_info = cef.WindowInfo()
         self.client_window = _pw.Window(
             cef=cef, window_info=window_info, settings=settings)
-        window_handle = self.client_window.platform_create_browser()
+        window_handle = self.client_window.platform_create_window()
 
         if current_platform != "Darwin":
             window_info.SetAsChild(window_handle)
+        
+        self.client_window.platform_create_browser(self.client_file_path)
     
-    def execute_js_function(self, function_name, params):
+    def new_bindings(self, bindToFrames=False, bindToPopups=False):
+        return cef.JavascriptBindings(
+            bindToFrames=bindToFrames, bindToPopups=bindToPopups)
+    
+    def bind_python_to_js(self, bindings):
+        self.client_window.browser.SetJavascriptBindings(bindings)
+    
+    def execute_js_function(self, function_name, *params):
         self.client_window.browser.ExecuteFunction(function_name, params)
     
     def run(self):
-        self.client_window.platform_message_loop(self.client_file_path)
+        self.client_window.platform_message_loop()
         cef.Shutdown()
+
+    def version(self):
+        return "1.0"
 
 def command_line_args():
     global g_multi_threaded
