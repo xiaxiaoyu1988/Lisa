@@ -35,7 +35,7 @@ class Window(object):
 
         pass
     
-    def platform_create_window(self, url)
+    def platform_create_browser(self, url):
         print("client url:", url)
         self.create_browser(url=url)
 
