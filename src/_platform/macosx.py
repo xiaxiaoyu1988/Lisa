@@ -40,7 +40,7 @@ class Window(object):
         self.create_browser(url=url)
 
     def platform_message_loop(self):
-        
+        self.browser.SendFocusEvent(True)
         self.cef.MessageLoop()
 
     def create_browser(self, url):

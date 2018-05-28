@@ -8,15 +8,20 @@
                 console.innerHTML += "<p>" + key + ":" + msg + "</p>";
             }
 
+            function js_callback(key, msg) {
+                js_log(key, msg)
+            }
+
             function test_python() {
                 js_log("lisa_var", lisa_var);
                 js_log("lisa_version", lisa_version);
-                js_log("call python_function", python_function("javascript"))
+                js_log("call python_function", python_function("javascript"));
+                demo_obj.test_demo(js_callback);
             }
         </script>
     </head>
 
-    <body>
+    <body draggable="true" ondragstart="drag(event)">
         <button onclick="test_python()" > click me</button>
 
         <div id="console_log">

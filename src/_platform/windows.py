@@ -66,6 +66,7 @@ class Window(object):
         if self.multi_threaded:
             win32gui.PumpMessages()
         else:
+            self.browser.SendFocusEvent(True)
             self.cef.MessageLoop()
 
     def create_browser(self, url):
@@ -75,7 +76,7 @@ class Window(object):
                             url=url)
 
 
-    def create_window(self, title, class_name, width, height, window_proc, icon):
+    def create_window(self, title, class_name, width, height, window_proc, icon, frameless = False):
         # Register window class
         wndclass = win32gui.WNDCLASS()
         wndclass.hInstance = win32api.GetModuleHandle(None)
@@ -98,11 +99,14 @@ class Window(object):
             ypos = 0
 
         # Create window
-        # window_style = (win32con.WS_OVERLAPPEDWINDOW | win32con.WS_CLIPCHILDREN
-            # | win32con.WS_VISIBLE |win32con.WS_POPUP)
-        window_style = win32con.WS_VISIBLE | win32con.WS_POPUP
-        # window_style = ~win32con.WS_CAPTION &~win32con.WS_SYSMENU &~win32con.WS_SIZEBOX;
-        window_style &= ~win32con.WS_HSCROLL & ~win32con.WS_VSCROLL
+        window_style = None
+        if frameless:
+            window_style = win32con.WS_VISIBLE | win32con.WS_POPUP
+            window_style &= ~win32con.WS_HSCROLL & ~win32con.WS_VSCROLL
+        else:
+            window_style = (win32con.WS_OVERLAPPEDWINDOW | win32con.WS_CLIPCHILDREN
+                | win32con.WS_VISIBLE)
+        
         window_handle = win32gui.CreateWindow(class_name, title, window_style,
                                             xpos, ypos, width, height,
                                             0, 0, wndclass.hInstance, None)
