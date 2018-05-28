@@ -13,6 +13,7 @@ import os
 import platform
 import _platform
 import sys
+import threading
 
 current_platform = platform.system()
 if current_platform == "Windows":
@@ -20,11 +21,15 @@ if current_platform == "Windows":
 elif current_platform == "Darwin":
     import _platform.macosx as _pw
 
+from webserver import Webserver
+
 
 class App(object):
     def __init__(self):
         self.client_window = None
         self.client_file_path = ""
+        self.wserver = Webserver()
+        self.wserver.setDaemon(True)
     
     def init(self, client_file_path = "file://client/index.html", debug=False):
         # command_line_args()
@@ -55,9 +60,10 @@ class App(object):
         self.client_window.browser.SetJavascriptBindings(bindings)
     
     def execute_js_function(self, function_name, *params):
-        self.client_window.browser.ExecuteFunction(function_name, params)
+        self.client_window.browser.ExecuteFunction(function_name, *params)
     
     def run(self):
+        self.wserver.start()
         self.client_window.platform_message_loop()
         cef.Shutdown()
 
