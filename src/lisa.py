@@ -14,6 +14,7 @@ import platform
 import _platform
 import sys
 import threading
+import time
 
 current_platform = platform.system()
 if current_platform == "Windows":
@@ -30,6 +31,7 @@ class App(object):
         self.client_window = None
         self.client_file_path = ""
         self.wserver = wserver
+        self.wserver.set_app(self)
         self.wserver.setDaemon(True)
 
     def init(self, client_file_path = "file://client/index.html", debug=False):
@@ -52,6 +54,7 @@ class App(object):
             window_info.SetAsChild(window_handle)
         
         self.client_window.platform_create_browser(self.client_file_path)
+        
     
     def new_bindings(self, bindToFrames=False, bindToPopups=False):
         return cef.JavascriptBindings(

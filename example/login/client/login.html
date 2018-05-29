@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>Login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+
+  <body class="bg-light">
+
+    <div class="container">
+      <div class="py-5 text-center">
+        <div class="input-group">
+          <input type="text" id = "username" class="form-control" placeholder="Username:admin" aria-label="Username:admin" aria-describedby="basic-addon2">
+          <input type="password" id = "password" class="form-control" placeholder="password:123" aria-label="Password:123" aria-describedby="basic-addon1">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button" onclick="Login()">Login</button>
+          </div>
+        </div>
+      </div>
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2017-2018 Xtimer.org</p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="https://github.com/xiaxiaoyu1988/lisa">Lisa</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script>
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+        BACKEND_BASE_PATH = 'http://127.0.0.1:'+ lisa_backend_port;
+        function Login() {
+          console.log($('#username').val(), $('#password').val());
+          console.log(BACKEND_BASE_PATH);
+          $.ajax({
+            url: BACKEND_BASE_PATH + "/login", 
+            username:$('#username').val(), 
+            password:$('#password').val(), 
+            success: function () {
+              $(this).addClass("done");
+            }
+          });
+        }
+    </script>
+  </body>
+</html>

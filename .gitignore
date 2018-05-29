@@ -103,3 +103,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 example/.DS_Store
+example/login/client/.DS_Store
+example/login/client/js/.DS_Store
+example/login/client/css/.DS_Store

@@ -12,10 +12,11 @@ class DuplicateRouteException(Exception):
 class ServerAdapter(object):
     quiet = False
 
-    def __init__(self, host='127.0.0.1', port=8080, **options):
+    def __init__(self, host='127.0.0.1', port=0, **options):
         self.options = options
         self.host = host
         self.port = int(port)
+        self.srv = None
 
     def run(self, handler):  # pragma: no cover
         pass
@@ -27,7 +28,7 @@ class ServerAdapter(object):
 
 
 class WSGIRefServer(ServerAdapter):
-    def run(self, _app):  # pragma: no cover
+    def run(self, _app, app):  # pragma: no cover
         from wsgiref.simple_server import WSGIRequestHandler, WSGIServer
         from wsgiref.simple_server import make_server
         import socket
@@ -48,8 +49,16 @@ class WSGIRefServer(ServerAdapter):
                 class server_cls(server_cls):
                     address_family = socket.AF_INET6
 
-        srv = make_server(self.host, self.port, _app, server_cls, handler_cls)
-        srv.serve_forever()
+        self.srv = make_server(self.host, self.port, _app, server_cls, handler_cls)
+        self.port = self.srv.server_address[1]
+        print self.port
+        bindings = app.new_bindings()
+        bindings.SetProperty("lisa_backend_port", self.port)
+        app.bind_python_to_js(bindings)
+
+        self.srv.serve_forever()
+    
+        
 
 
 class Router(object):
@@ -88,6 +97,7 @@ class BaseResponse(dict):
         super(BaseResponse, self).__init__()
         self.__setitem__('status_line', '200 OK')
         self.__setitem__('charset', 'UTF-8')
+        self.__setitem__('Access-Control-Allow-Origin', '*')
         self.__setitem__('Content-Type', 'application/json; charset=' +
                          self.__getitem__('charset'))
     
@@ -107,6 +117,13 @@ class BaseResponse(dict):
     __setattr__ = __setitem__
     __getattr__ = __missing__ 
 
+class HTTPError(BaseResponse):
+    def __init__(self, error_code, error_line):
+        super(HTTPError, self).__init__()
+        self.__setitem__('status_line', str(error_code) + ' ' + error_line)
+        
+
+
 class BaseRequest(object):
     def __init__(self, environ):
         pass
@@ -118,6 +135,9 @@ class Webserver(threading.Thread):
         self.server = WSGIRefServer()
         self.router = Router()
         self.routes = []
+    
+    def set_app(self, app):
+        self.app = app
     
     def route(self, path = '', method = 'GET'):
         def decorator(func):
@@ -135,6 +155,8 @@ class Webserver(threading.Thread):
         self.req = BaseRequest(environ)
         self.res = BaseResponse()
         func = self.router.match(environ)
+        if not func:
+            return HTTPError(404, 'NOT FOUND')
         return func()
     
     def _cast(self, out):
@@ -147,11 +169,19 @@ class Webserver(threading.Thread):
         if isinstance(out, bytes):
             self.res['Content-Length'] = len(out)
         
+        if isinstance(out, HTTPError):
+            self.res = out
+            self.res['Content-Length'] = 0
+            return [out.status_line]
+        
         return [out]
     
     def wsgi(self, environ, start_response):
         try:
             out = self._cast(self._handle(environ))
+            print self.res.status_line
+            print self.res.headers
+            print out
             # start_response('200 OK', [
                         #    ('Content-Length', '5'), ('Content-Type', 'text/html; charset=UTF-8')])
             start_response(self.res.status_line, self.res.headers)
@@ -163,9 +193,7 @@ class Webserver(threading.Thread):
         return self.wsgi(environ, start_response)
 
     def run(self):
-        self.server.run(self)
-
-
+        self.server.run(self, self.app)
 
 def make_app_wrapper(name, cobj):
     @functools.wraps(getattr(Webserver, name))
