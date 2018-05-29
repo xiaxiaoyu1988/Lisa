@@ -2,12 +2,12 @@ import os
 import sys
 
 sys.path.append(r"../../src")
-from lisa import App
+from lisa import App, route
 
+@route('/')
+def index():
+    return '{"a":"b"}'
 
-@route('/test')
-def test():
-    print 'test'
 
 def main():
     app = App()

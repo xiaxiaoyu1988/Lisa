@@ -21,16 +21,17 @@ if current_platform == "Windows":
 elif current_platform == "Darwin":
     import _platform.macosx as _pw
 
-from webserver import Webserver
+from webserver import *
 
-
+wserver = Webserver()
+route = make_app_wrapper("route", wserver)
 class App(object):
     def __init__(self):
         self.client_window = None
         self.client_file_path = ""
-        self.wserver = Webserver()
+        self.wserver = wserver
         self.wserver.setDaemon(True)
-    
+
     def init(self, client_file_path = "file://client/index.html", debug=False):
         # command_line_args()
         check_versions()
