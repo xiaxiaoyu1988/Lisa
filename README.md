@@ -23,7 +23,8 @@ Base on pyinstaller
 ```
 
 ## ToDo
- * [ ] Base framework
+ * [x] Basic framework
+ * [ ] config file support
  * [x] Windows Support
     * [x] Base on pywin32 
     * [x] Hide title bar
@@ -33,8 +34,18 @@ Base on pyinstaller
      * [ ] Custom window height and width
      * [ ] Hide title bar
  * [ ] Linux Support
- * [ ] Front and back communication
-     * [ ] Javascript callback
-     * [ ] http protocol
+ * [x] Front and back communication
+     * [x] Javascript callback
+     * [x] http protocol support @refer to [bottle.py](http://www.bottlepy.org/docs/dev/)
+         * [ ] http error handle
+         * [ ] @route support function args 
  * [ ] Database Support
      * [ ] Internal sqlite3 support   
+ * [X] Example
+     * [X] helloworld
+     * [X] calljs
+     * [X] callpython
+     * [X] bootstrap
+     * [X] http
+     * [ ] login
+     * [ ] crossplatrom window custom
