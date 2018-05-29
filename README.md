@@ -1,4 +1,4 @@
-# lisa
+# Lisa
 A cross platform ui kit base on [cefpython](https://github.com/cztomczak/cefpython)
 
 - [lisa](#lisa)
