@@ -25,7 +25,8 @@ elif current_platform == "Darwin":
 from webserver import *
 
 wserver = Webserver()
-route = make_app_wrapper("route", wserver)
+route   = make_app_wrapper("route", wserver)
+redirect = make_app_wrapper("redirect", wserver)
 class App(object):
     def __init__(self):
         self.client_window = None
@@ -33,6 +34,7 @@ class App(object):
         self.wserver = wserver
         self.wserver.set_app(self)
         self.wserver.setDaemon(True)
+        self.bindings = self.new_bindings()
 
     def init(self, client_file_path = "file://client/index.html", debug=False):
         # command_line_args()
@@ -54,7 +56,6 @@ class App(object):
             window_info.SetAsChild(window_handle)
         
         self.client_window.platform_create_browser(self.client_file_path)
-        
     
     def new_bindings(self, bindToFrames=False, bindToPopups=False):
         return cef.JavascriptBindings(

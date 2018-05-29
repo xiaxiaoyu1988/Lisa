@@ -1,6 +1,6 @@
 import functools
 import threading
-
+import os
 
 class DuplicateRouteException(Exception):
     def __init__(self, value):
@@ -51,10 +51,10 @@ class WSGIRefServer(ServerAdapter):
 
         self.srv = make_server(self.host, self.port, _app, server_cls, handler_cls)
         self.port = self.srv.server_address[1]
-        print self.port
-        bindings = app.new_bindings()
-        bindings.SetProperty("lisa_backend_port", self.port)
-        app.bind_python_to_js(bindings)
+
+        app.bindings.SetProperty("FRONT_BASE_PATH", 'file://' + os.getcwd() + '/client')
+        app.bindings.SetProperty("BACKEND_BASE_PATH", 'http://127.0.0.1:' + str(self.port))
+        app.bind_python_to_js(app.bindings)
 
         self.srv.serve_forever()
     
@@ -118,14 +118,44 @@ class BaseResponse(dict):
     __getattr__ = __missing__ 
 
 class HTTPError(BaseResponse):
-    def __init__(self, error_code, error_line):
+    def __init__(self, error_code, error_line, location = None):
         super(HTTPError, self).__init__()
         self.__setitem__('status_line', str(error_code) + ' ' + error_line)
+
+        if location:
+            self.__setitem__('Location', location)
         
 
 
 class BaseRequest(object):
     def __init__(self, environ):
+        self.query_string = environ.get('QUERY_STRING', '')
+        self.params = {}
+        self.__parse()
+
+    def __parse(self):
+        items = self.query_string.split('&')
+        for item in items:
+            tmp = item.split('=')
+            self.params[tmp[0]] = tmp[1]
+
+
+    def path(self):
+        pass
+
+    def cookie(self):
+        pass
+
+    def method(self):
+        pass
+
+    def headers(self):
+        pass
+
+    def params(self):
+        pass
+
+    def json(self):
         pass
 
 class Webserver(threading.Thread):
@@ -135,7 +165,7 @@ class Webserver(threading.Thread):
         self.server = WSGIRefServer()
         self.router = Router()
         self.routes = []
-    
+
     def set_app(self, app):
         self.app = app
     
@@ -146,6 +176,9 @@ class Webserver(threading.Thread):
             return func
         
         return decorator
+
+    def redirect(self, url):
+        return HTTPError(302, "Redirect", url)
     
     def add_route(self,route):
         self.routes.append(route)
@@ -179,9 +212,6 @@ class Webserver(threading.Thread):
     def wsgi(self, environ, start_response):
         try:
             out = self._cast(self._handle(environ))
-            print self.res.status_line
-            print self.res.headers
-            print out
             # start_response('200 OK', [
                         #    ('Content-Length', '5'), ('Content-Type', 'text/html; charset=UTF-8')])
             start_response(self.res.status_line, self.res.headers)

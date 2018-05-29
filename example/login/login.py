@@ -2,12 +2,16 @@ import os
 import sys
 
 sys.path.append(r"../../src")
-from lisa import App, route
+from lisa import App, route, wserver, redirect
 
-@route('/')
-def index():
-    return '{"a":"b"}'
-
+@route('/login')
+def login():
+	username = wserver.req.params['username']
+	password = wserver.req.params['password']
+	if username == 'admin' and password == '123':
+		return '{"code":0}'
+	else:
+		return '{"code":1}'
 
 def main():
     app = App()

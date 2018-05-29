@@ -24,12 +24,10 @@ def main():
     app.init(client_path)
 
     demo_obj = demo(app)
-    bindings = app.new_bindings()
-    bindings.SetProperty("lisa_var", "This property was set in Python")
-    bindings.SetProperty("lisa_version", app.version())
-    bindings.SetFunction("python_function", python_function)
-    bindings.SetObject("demo_obj", demo_obj)
-    app.bind_python_to_js(bindings)
+    app.bindings.SetProperty("lisa_var", "This property was set in Python")
+    app.bindings.SetProperty("lisa_version", app.version())
+    app.bindings.SetFunction("python_function", python_function)
+    app.bindings.SetObject("demo_obj", demo_obj)
 
     app.run()
 

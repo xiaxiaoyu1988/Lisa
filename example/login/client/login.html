@@ -41,16 +41,24 @@
     <script src="./js/bootstrap.min.js"></script>
     <script>
       // Example starter JavaScript for disabling form submissions if there are invalid fields
-        BACKEND_BASE_PATH = 'http://127.0.0.1:'+ lisa_backend_port;
         function Login() {
           console.log($('#username').val(), $('#password').val());
           console.log(BACKEND_BASE_PATH);
+          console.log(FRONT_BASE_PATH);
           $.ajax({
             url: BACKEND_BASE_PATH + "/login", 
-            username:$('#username').val(), 
-            password:$('#password').val(), 
-            success: function () {
-              $(this).addClass("done");
+            data:{
+              'username':$('#username').val(), 
+              'password':$('#password').val(), 
+            },
+            dataType:'json',
+            success: function (data) {
+              console.log(data);
+              if(data.code == 0)
+              {
+                window.location.href  = FRONT_BASE_PATH + '/index.html';
+
+              }
             }
           });
         }
