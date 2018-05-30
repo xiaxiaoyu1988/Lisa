@@ -36,6 +36,13 @@ class App(object):
         self.wserver.setDaemon(True)
         self.bindings = self.new_bindings()
 
+        self.title = title
+        self.class_name = class_name
+        self.width = width
+        self.height = height
+        self.icon = icon
+        self.frameless = frameless
+
     def init(self, client_file_path = "file://client/index.html", debug=False):
         # command_line_args()
         check_versions()
@@ -51,7 +58,7 @@ class App(object):
         self.client_window = _pw.Window(
             cef=cef, window_info=window_info, settings=settings)
         window_handle = self.client_window.platform_create_window(
-            title, class_name, width, height, icon, frameless)
+            self.title, self.class_name, self.width, self.height, self.icon, self.frameless)
 
         if current_platform != "Darwin":
             window_info.SetAsChild(window_handle)
