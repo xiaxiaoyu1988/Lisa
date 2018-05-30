@@ -28,7 +28,7 @@ wserver = Webserver()
 route   = make_app_wrapper("route", wserver)
 redirect = make_app_wrapper("redirect", wserver)
 class App(object):
-    def __init__(self):
+    def __init__(self, title="lisa", class_name="lisa", width=800, height=600, icon="", frameless=False):
         self.client_window = None
         self.client_file_path = ""
         self.wserver = wserver
@@ -50,7 +50,8 @@ class App(object):
         window_info = cef.WindowInfo()
         self.client_window = _pw.Window(
             cef=cef, window_info=window_info, settings=settings)
-        window_handle = self.client_window.platform_create_window()
+        window_handle = self.client_window.platform_create_window(
+            title, class_name, width, height, icon, frameless)
 
         if current_platform != "Darwin":
             window_info.SetAsChild(window_handle)
