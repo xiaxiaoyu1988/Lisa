@@ -50,7 +50,8 @@ class Window(object):
                                       width=width,
                                       height=height,
                                       window_proc=self.window_proc,
-                                      icon=icon)
+                                      icon=icon,
+                                        frameless=frameless)
         return self.window_handle
     
     def platform_create_browser(self, url):
