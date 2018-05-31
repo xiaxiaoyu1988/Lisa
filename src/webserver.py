@@ -139,6 +139,8 @@ class BaseRequest(object):
             if not item:
                 continue
             tmp = item.split('=')
+            if len(tmp) < 2:
+                continue
             self.params[tmp[0]] = tmp[1]
 
 
