@@ -212,6 +212,7 @@ class Webserver(threading.Thread):
     def wsgi(self, environ, start_response):
         try:
             out = self._cast(self._handle(environ))
+            print self.res
             # start_response('200 OK', [
                         #    ('Content-Length', '5'), ('Content-Type', 'text/html; charset=UTF-8')])
             start_response(self.res.status_line, self.res.headers)
