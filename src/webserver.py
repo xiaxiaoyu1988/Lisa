@@ -136,6 +136,8 @@ class BaseRequest(object):
     def __parse(self):
         items = self.query_string.split('&')
         for item in items:
+            if not item:
+                continue
             tmp = item.split('=')
             self.params[tmp[0]] = tmp[1]
 
@@ -185,9 +187,12 @@ class Webserver(threading.Thread):
         self.router.add(route)
     
     def _handle(self, environ):
+        # print '_handle------'
         self.req = BaseRequest(environ)
         self.res = BaseResponse()
+        # print 'match ---'
         func = self.router.match(environ)
+        # print func
         if not func:
             return HTTPError(404, 'NOT FOUND')
         return func()
@@ -212,7 +217,7 @@ class Webserver(threading.Thread):
     def wsgi(self, environ, start_response):
         try:
             out = self._cast(self._handle(environ))
-            print self.res
+            # print self.res
             # start_response('200 OK', [
                         #    ('Content-Length', '5'), ('Content-Type', 'text/html; charset=UTF-8')])
             start_response(self.res.status_line, self.res.headers)
@@ -221,6 +226,7 @@ class Webserver(threading.Thread):
             print str(e)
     
     def __call__(self, environ, start_response):
+        # print '----------------------------'
         return self.wsgi(environ, start_response)
 
     def run(self):
